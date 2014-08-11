@@ -17,8 +17,21 @@ areaRect l w = l * w
 
 
 -- haron's formula
+
 heron a b c = sqrt (s*(s-a)*(s-b)*(s-c))
 	where
 	s = (a + b + c) / 2
 
+
+abs x 
+	| x<0 = 0-x
+	| otherwise = x
 	
+{--
+NumSolve a b c
+	| d > 0 = 2
+	| d == 0 = 1
+	| otherwise = 0
+		where
+		d = b^2 - 4*a*c
+--}
