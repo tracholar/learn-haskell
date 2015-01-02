@@ -1,0 +1,3 @@
+
+oddSquareSum :: Integer
+oddSquareSum = sum
