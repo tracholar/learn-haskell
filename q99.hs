@@ -118,20 +118,57 @@ totient n = length $ filter (coprime n) [1..n]
 
 primeFactors :: Int -> [Int]
 primeFactors n = pf n 2
-	where pf 1 _ = []
+	where 
+		pf 1 _ = []
 		pf n f
-			| mod n f ==0 = f : pf (n/f) f
+			| mod n f ==0 = f : pf (n `div` f) f
 			| otherwise = pf n (f+1)
 
+primeFactorsMult :: Int -> [(Int,Int)]
+primeFactorsMult = (map f) . encode . primeFactors
+	where f (x,y) = (y,x)
+
+-- 欧拉函数
+phi :: Int -> Int
+phi = foldl f 1 . primeFactorsMult
+	where f y x = y * (p-1) * p ^ (m-1)
+		where
+			p = fst x
+			m = snd x
+
+primesR :: Int -> Int -> [Int]
+primesR a b = [x|x<-[a..b], isPrime x]
+
+-- 哥德巴赫猜想
+goldbach :: Int -> [(Int, Int)]
+goldbach n = filter (/=(0,0)) $ map f $ primesR 2 (n `div` 2)
+	where f x = if isPrime x && isPrime (n-x)
+				then (x, n-x)
+				else (0,0)
+
+goldbach' = head . goldbach
+
+goldbachList :: Int -> Int -> [(Int,Int)]
+goldbachList a b = map (\x->goldbach' x) $ filter even [a..b]
 
 
+goldbachList' a b c = map (\x->head x) $ filter (\x->x/=[]) arr
+	where arr = map (\x->filter (\y->fst y>c && snd y>c) x) $ map (\x->goldbach x) $ filter even [a..b]
+		
+
+-- 46->50
+table :: (Bool -> Bool -> Bool) -> IO()
+table f = putStrLn $ concatMap (++ "\n") [show x ++ "\t" ++ show y ++ "\t" ++ show y|x<-[True,False],y<-[True,False],z<-[f x y]]
 
 
+-- gray codes
+gray :: Int -> [String]
+gray 0 = [""]
+gray n = map ('0':) xs ++ map ('1':) (reverse xs)
+	where xs = gray (n-1)
 
-
-
-
-
+-- huffman codes
+-- huffman :: [Char, Int] -> [Char, String]
 
 
 
